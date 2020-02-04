@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import blogsService from './services/blogs'
 import loginService from './services/login'
 import Blog from './components/Blog'
@@ -7,12 +8,13 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 
-const App = () => {
+import { showNotification } from './actions/actions'
+
+const App = (props) => {
   const [ user, setUser] = useState(null)
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ blogs, setBlogs ] = useState([])
-  const [ message, setMessage ] = useState(null)
   
   const [ title, setTitle ] = useState('')
   const [ author, setAuthor ] = useState('')
@@ -38,10 +40,7 @@ const App = () => {
 
 
     } catch(error) {
-      setMessage(`Incorrect login or password`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      props.showNotification('incorrect login or password')
       console.log(error)
     }
     setUsername('')
@@ -66,16 +65,10 @@ const App = () => {
   
       blogsService.setToken(user.token)
       const createdBlog = await blogsService.create(newBlog)
-      setMessage('blog has been succesfully created!')
       setBlogs([...blogs, createdBlog])
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      props.showNotification('blog has been succesfully created!')
     } catch(error) {
-        setMessage('blog could not have been created')
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+        props.showNotification('blog could not have been created')
         console.log(error)
     }
   }
@@ -86,11 +79,13 @@ const App = () => {
 
       blogsService.setToken(user.token)
       const response = await blogsService.update(updatedObj, blog.id)
+      console.log(response)
       const newBlogs = blogs
         .filter((item) => item.id !== blog.id)
         .concat(updatedObj)
       newBlogs.sort((a, b) => b.likes - a.likes)
       setBlogs(newBlogs)
+      props.showNotification('you liked this post')
 
     } catch(error) {
       console.log(error)
@@ -116,7 +111,7 @@ const App = () => {
   const renderLoginForm = () => (
     <div>    
         <h2>Log in to application</h2>
-        <Notification message={message}/>
+        <Notification />
         <Togglable buttonLabel='log in'>
           <LoginForm 
             handleSubmit={handleLogin}
@@ -134,7 +129,7 @@ const App = () => {
       <div>
         <h2>blogs</h2>
         <h3>{user.name} logged in</h3>
-        <Notification message={message}/>
+        <Notification message={props.message}/>
         
         <Togglable buttonLabel='create new blog'>
           <BlogForm
@@ -174,4 +169,16 @@ const App = () => {
   )
 }
 
-export default App
+const mapStateToProps = (state) => {
+  return {
+    message: state.notification
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    showNotification: (message) => dispatch(showNotification(message)) 
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
