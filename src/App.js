@@ -8,7 +8,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 
-import { showNotification } from './actions/actions'
+import { showNotification, getAllBlogs, createBlog, incrementLikes } from './actions/actions'
 
 const App = (props) => {
   const [ user, setUser] = useState(null)
@@ -23,6 +23,7 @@ const App = (props) => {
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("user")))
+    
   }, [])
 
 
@@ -34,9 +35,10 @@ const App = (props) => {
       localStorage.setItem('user', JSON.stringify(loggedUser))
       
       setUser(loggedUser)
-      const fetchedBlogs = await blogsService.getAll()
-      fetchedBlogs.sort((a, b) => b.likes - a.likes)
-      setBlogs([...fetchedBlogs])
+      // const fetchedBlogs = await blogsService.getAll()
+      // fetchedBlogs.sort((a, b) => b.likes - a.likes)
+      // setBlogs([...fetchedBlogs])
+      props.getAllBlogs()
 
 
     } catch(error) {
@@ -64,8 +66,10 @@ const App = (props) => {
       }
   
       blogsService.setToken(user.token)
-      const createdBlog = await blogsService.create(newBlog)
-      setBlogs([...blogs, createdBlog])
+      props.createBlog(newBlog)
+      //const createdBlog = await blogsService.create(newBlog)
+      //setBlogs([...blogs, createdBlog])
+
       props.showNotification('blog has been succesfully created!')
     } catch(error) {
         props.showNotification('blog could not have been created')
@@ -73,18 +77,19 @@ const App = (props) => {
     }
   }
 
-  const incrementLikes = async (blog) => {
+  const handleLike = async (blog) => {
     try {
-      const updatedObj = { ...blog, user:user.id, likes: blog.likes+1 }
+      const updatedObj = { ...blog, likes: blog.likes+1 }
 
       blogsService.setToken(user.token)
-      const response = await blogsService.update(updatedObj, blog.id)
-      console.log(response)
-      const newBlogs = blogs
-        .filter((item) => item.id !== blog.id)
-        .concat(updatedObj)
-      newBlogs.sort((a, b) => b.likes - a.likes)
-      setBlogs(newBlogs)
+      props.incrementLikes(updatedObj, blog.id)
+      //const response = await blogsService.update(updatedObj, blog.id)
+      // console.log(response)
+      // const newBlogs = blogs
+      //   .filter((item) => item.id !== blog.id)
+      //   .concat(updatedObj)
+      // newBlogs.sort((a, b) => b.likes - a.likes)
+      // setBlogs(newBlogs)
       props.showNotification('you liked this post')
 
     } catch(error) {
@@ -125,6 +130,7 @@ const App = (props) => {
   )
 
   const renderBlogs = () => {
+    console.log(props.blogs)
     return (
       <div>
         <h2>blogs</h2>
@@ -144,16 +150,17 @@ const App = (props) => {
         </Togglable>
           
         <button onClick={handleLogout}>logout</button>
-        { blogs.map((blog) => 
+         { props.blogs.map((blog) =>
           <Blog 
             key={blog.id} 
             blog={blog} 
             userId={user.id}
-            incrementLikes={ () => incrementLikes(blog) }
+            handleLike={ () => handleLike(blog) }
             removeBlog={ () => removeBlog(blog) }
 
           />
-        ) }
+        ) 
+      }
       </div>
     )
   }
@@ -171,13 +178,17 @@ const App = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    message: state.notification
+    message: state.notification,
+    blogs: state.blogs.items
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    showNotification: (message) => dispatch(showNotification(message)) 
+    showNotification: (message) => dispatch(showNotification(message)),
+    getAllBlogs: () => dispatch(getAllBlogs()),
+    createBlog: (blog) => dispatch(createBlog(blog)),
+    incrementLikes: (blog, id) => dispatch(incrementLikes(blog, id))
   }
 }
 
