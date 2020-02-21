@@ -2,7 +2,8 @@ import {
   RECEIVE_BLOGS, 
   REQUEST_BLOGS, 
   CREATE_BLOG_SUCCESS, 
-  INCREMENT_LIKES 
+  INCREMENT_LIKES, 
+  REMOVE_BLOG_SUCCESS
 } from "../actions/actions"
 
 const initialState = {
@@ -17,13 +18,14 @@ const blogsReducer = (state = initialState, action) => {
     case RECEIVE_BLOGS:
       return { 
         ...state, 
-        items: action.blogs, 
+        items: action.blogs,
         isFetching: false 
       }
     case CREATE_BLOG_SUCCESS:
       return {
         ...state,
-        items: [...state.items, action.response]
+        items: [...state.items, action.payload],
+        isFetching: false
       }
     case INCREMENT_LIKES:
       const blog = state.items.find(item => item.id === action.id)
@@ -32,6 +34,13 @@ const blogsReducer = (state = initialState, action) => {
         items: [
           ...state.items.filter(item => item.id !== action.id),
           {...blog, likes: blog.likes +1 }
+        ]
+      }
+    case REMOVE_BLOG_SUCCESS:
+      return {
+        ...state,
+        items: [
+          ...state.items.filter(item => item.id !== action.id)
         ]
       }
     default:

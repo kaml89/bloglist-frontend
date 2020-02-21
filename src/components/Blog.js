@@ -15,6 +15,7 @@ const Blog = ({ blog, userId, handleLike, removeBlog }) => {
         {likes} likes <button onClick={handleLike}>like</button>
         {author}
       </div> 
+      {console.log(user, userId)}
       <button
         onClick={removeBlog}
         style={{ display: user.id === userId ? ''  :'none' }}

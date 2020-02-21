@@ -6,19 +6,27 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import blogsReducer from './reducers/blogsReducer'
 import notificationReducer from './reducers/notificationReducer'
+import authReducer from './reducers/authReducer'
+import { loadState, saveState } from './localStorage'
+
 
 const rootReducer = combineReducers({
   blogs: blogsReducer,
-  notification: notificationReducer
+  notification: notificationReducer,
+  auth: authReducer
 }) 
+
+const preloadedState = loadState()
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-const store = createStore(rootReducer, /* preloadedState, */ composeEnhancers(
+const store = createStore(rootReducer, preloadedState, composeEnhancers(
   applyMiddleware(thunk)
 ))
 
-//const store = createStore(rootReducer, applyMiddleware(thunk))
+store.subscribe(() => {
+  saveState(store.getState())
+})
 
 render(
   <Provider store={store}>

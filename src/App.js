@@ -8,7 +8,15 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 
-import { showNotification, getAllBlogs, createBlog, incrementLikes } from './actions/actions'
+import { 
+  showNotification, 
+  getAllBlogs, 
+  createBlog, 
+  incrementLikes, 
+  logInUserFetch,
+  logout,
+  removeBlog
+} from './actions/actions'
 
 const App = (props) => {
   const [ user, setUser] = useState(null)
@@ -21,25 +29,25 @@ const App = (props) => {
   const [ url, setUrl ] = useState('')
 
 
-  useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem("user")))
+  // useEffect(() => {
+  //   setUser(JSON.parse(localStorage.getItem("user")))
     
-  }, [])
+  // }, [])
 
 
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const loggedUser = await loginService.login({username, password})
-      console.log(user)
-      localStorage.setItem('user', JSON.stringify(loggedUser))
+      // const loggedUser = await loginService.login({username, password})
+      // console.log(user)
+      // localStorage.setItem('user', JSON.stringify(loggedUser))
       
-      setUser(loggedUser)
+      // setUser(loggedUser)
       // const fetchedBlogs = await blogsService.getAll()
       // fetchedBlogs.sort((a, b) => b.likes - a.likes)
       // setBlogs([...fetchedBlogs])
+      props.logInUserFetch({username, password})
       props.getAllBlogs()
-
 
     } catch(error) {
       props.showNotification('incorrect login or password')
@@ -50,8 +58,9 @@ const App = (props) => {
   }
 
   const handleLogout = (e) => {
-    localStorage.removeItem("user")
-    setUser(null)
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    props.logout()
 
   }
 
@@ -65,7 +74,7 @@ const App = (props) => {
         url
       }
   
-      blogsService.setToken(user.token)
+      // blogsService.setToken(props.user.token)
       props.createBlog(newBlog)
       //const createdBlog = await blogsService.create(newBlog)
       //setBlogs([...blogs, createdBlog])
@@ -81,7 +90,7 @@ const App = (props) => {
     try {
       const updatedObj = { ...blog, likes: blog.likes+1 }
 
-      blogsService.setToken(user.token)
+      // blogsService.setToken(props.user.token)
       props.incrementLikes(updatedObj, blog.id)
       //const response = await blogsService.update(updatedObj, blog.id)
       // console.log(response)
@@ -89,7 +98,7 @@ const App = (props) => {
       //   .filter((item) => item.id !== blog.id)
       //   .concat(updatedObj)
       // newBlogs.sort((a, b) => b.likes - a.likes)
-      // setBlogs(newBlogs)
+      
       props.showNotification('you liked this post')
 
     } catch(error) {
@@ -97,21 +106,21 @@ const App = (props) => {
     }
   }
 
-  const removeBlog = async (blog) => {
-    try {
-      blogsService.setToken(user.token)
-      if (window.confirm('Do you really want to remove this blog?')) {
-        const response = await blogsService.deleteBlog(blog.id)
-        const newBlogs = blogs
-        .filter((item) => item.id !== blog.id)
-        setBlogs(newBlogs)
-      }
+  // const removeBlog = async (blog) => {
+  //   try {
+  //     // blogsService.setToken(props.user.token)
+  //     if (window.confirm('Do you really want to remove this blog?')) {
+  //       const response = await blogsService.deleteBlog(blog.id)
+  //       const newBlogs = blogs
+  //       .filter((item) => item.id !== blog.id)
+  //       setBlogs(newBlogs)
+  //     }
       
       
-    } catch(error) {
-      console.log(error)
-    }
-  }
+  //   } catch(error) {
+  //     console.log(error)
+  //   }
+  // }
 
   const renderLoginForm = () => (
     <div>    
@@ -130,11 +139,11 @@ const App = (props) => {
   )
 
   const renderBlogs = () => {
-    console.log(props.blogs)
+    //console.log(props.blogs)
     return (
       <div>
         <h2>blogs</h2>
-        <h3>{user.name} logged in</h3>
+        <h3>{props.user.name} logged in</h3>
         <Notification message={props.message}/>
         
         <Togglable buttonLabel='create new blog'>
@@ -148,15 +157,14 @@ const App = (props) => {
             url={ url }
           />
         </Togglable>
-          
         <button onClick={handleLogout}>logout</button>
          { props.blogs.map((blog) =>
           <Blog 
             key={blog.id} 
             blog={blog} 
-            userId={user.id}
+            userId={props.user.user.id}
             handleLike={ () => handleLike(blog) }
-            removeBlog={ () => removeBlog(blog) }
+            removeBlog={ () => props.removeBlog(blog.id) }
 
           />
         ) 
@@ -164,13 +172,14 @@ const App = (props) => {
       </div>
     )
   }
-
   return (
     <div>
+      
       { 
-        user === null ?
-        renderLoginForm() : 
-        renderBlogs()
+        // props.user.username ? 
+        props.user.isAuthenticated ?
+        renderBlogs() :
+        renderLoginForm()
       }
     </div>
   )
@@ -179,7 +188,8 @@ const App = (props) => {
 const mapStateToProps = (state) => {
   return {
     message: state.notification,
-    blogs: state.blogs.items
+    blogs: state.blogs.items,
+    user: state.auth
   }
 }
 
@@ -188,7 +198,10 @@ const mapDispatchToProps = (dispatch) => {
     showNotification: (message) => dispatch(showNotification(message)),
     getAllBlogs: () => dispatch(getAllBlogs()),
     createBlog: (blog) => dispatch(createBlog(blog)),
-    incrementLikes: (blog, id) => dispatch(incrementLikes(blog, id))
+    incrementLikes: (blog, id) => dispatch(incrementLikes(blog, id)),
+    logInUserFetch: (credentials) => dispatch(logInUserFetch(credentials)),
+    logout: () => dispatch(logout()),
+    removeBlog: (id) => dispatch(removeBlog(id))
   }
 }
 
