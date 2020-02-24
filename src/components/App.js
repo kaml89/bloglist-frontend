@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import blogsService from './services/blogs'
-import loginService from './services/login'
-import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
-import Notification from './components/Notification'
-import LoginForm from './components/LoginForm'
-import Togglable from './components/Togglable'
+import blogsService from '../services/blogs'
+import loginService from '../services/login'
+import Blog from './Blog'
+import BlogForm from './BlogForm'
+import Notification from './Notification'
+import LoginForm from './LoginForm'
+import Togglable from './Togglable'
 
 import { 
   showNotification, 
@@ -16,7 +16,7 @@ import {
   logInUserFetch,
   logout,
   removeBlog
-} from './actions/actions'
+} from '../actions/actions'
 
 const App = (props) => {
   const [ user, setUser] = useState(null)

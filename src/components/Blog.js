@@ -4,7 +4,6 @@ const Blog = ({ blog, userId, handleLike, removeBlog }) => {
   const [ visibility, setVisibility ] = useState(false)
   
   const { title, author, url, likes, id, user } = blog
-  //console.log(blog.user, userId)
   return (
     <div style={{border:'solid 1px black', marginBottom: '2px'}}>
       <div onClick={() => setVisibility(!visibility)}>
@@ -15,7 +14,6 @@ const Blog = ({ blog, userId, handleLike, removeBlog }) => {
         {likes} likes <button onClick={handleLike}>like</button>
         {author}
       </div> 
-      {console.log(user, userId)}
       <button
         onClick={removeBlog}
         style={{ display: user.id === userId ? ''  :'none' }}
