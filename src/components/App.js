@@ -4,6 +4,7 @@ import blogsService from '../services/blogs'
 import loginService from '../services/login'
 import Blog from './Blog'
 import BlogForm from './BlogForm'
+import BlogList from './BlogList'
 import Notification from './Notification'
 import LoginForm from './LoginForm'
 import Togglable from './Togglable'
@@ -35,27 +36,19 @@ const App = (props) => {
   // }, [])
 
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    try {
-      // const loggedUser = await loginService.login({username, password})
-      // console.log(user)
-      // localStorage.setItem('user', JSON.stringify(loggedUser))
-      
-      // setUser(loggedUser)
-      // const fetchedBlogs = await blogsService.getAll()
-      // fetchedBlogs.sort((a, b) => b.likes - a.likes)
-      // setBlogs([...fetchedBlogs])
-      props.logInUserFetch({username, password})
-      props.getAllBlogs()
+  // const handleLogin = async (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     props.logInUserFetch({username, password})
+  //     props.getAllBlogs()
 
-    } catch(error) {
-      props.showNotification('incorrect login or password')
-      console.log(error)
-    }
-    setUsername('')
-    setPassword('')
-  }
+  //   } catch(error) {
+  //     props.showNotification('incorrect login or password')
+  //     console.log(error)
+  //   }
+  //   setUsername('')
+  //   setPassword('')
+  // }
 
   const handleLogout = (e) => {
     localStorage.removeItem('token')
@@ -86,25 +79,25 @@ const App = (props) => {
     }
   }
 
-  const handleLike = async (blog) => {
-    try {
-      const updatedObj = { ...blog, likes: blog.likes+1 }
+  // const handleLike = async (blog) => {
+  //   try {
+  //     const updatedObj = { ...blog, likes: blog.likes+1 }
 
-      // blogsService.setToken(props.user.token)
-      props.incrementLikes(updatedObj, blog.id)
-      //const response = await blogsService.update(updatedObj, blog.id)
-      // console.log(response)
-      // const newBlogs = blogs
-      //   .filter((item) => item.id !== blog.id)
-      //   .concat(updatedObj)
-      // newBlogs.sort((a, b) => b.likes - a.likes)
+  //     // blogsService.setToken(props.user.token)
+  //     props.incrementLikes(updatedObj, blog.id)
+  //     //const response = await blogsService.update(updatedObj, blog.id)
+  //     // console.log(response)
+  //     // const newBlogs = blogs
+  //     //   .filter((item) => item.id !== blog.id)
+  //     //   .concat(updatedObj)
+  //     // newBlogs.sort((a, b) => b.likes - a.likes)
       
-      props.showNotification('you liked this post')
+  //     props.showNotification('you liked this post')
 
-    } catch(error) {
-      console.log(error)
-    }
-  }
+  //   } catch(error) {
+  //     console.log(error)
+  //   }
+  // }
 
   // const removeBlog = async (blog) => {
   //   try {
@@ -125,14 +118,14 @@ const App = (props) => {
   const renderLoginForm = () => (
     <div>    
         <h2>Log in to application</h2>
-        <Notification />
+        <Notification message={props.message}/>
         <Togglable buttonLabel='log in'>
           <LoginForm 
-            handleSubmit={handleLogin}
-            handleUsernameChange={(e) => setUsername(e.target.value)}
-            handlePasswordChange={(e) => setPassword(e.target.value)}
-            username={username}
-            password={password}
+            // handleSubmit={handleLogin}
+            // handleUsernameChange={(e) => setUsername(e.target.value)}
+            // handlePasswordChange={(e) => setPassword(e.target.value)}
+            // username={username}
+            // password={password}
           />
         </Togglable>
       </div>
@@ -144,7 +137,7 @@ const App = (props) => {
       <div>
         <h2>blogs</h2>
         <h3>{props.user.name} logged in</h3>
-        <Notification message={props.message}/>
+        <Notification message={props.message} />
         
         <Togglable buttonLabel='create new blog'>
           <BlogForm
@@ -158,17 +151,17 @@ const App = (props) => {
           />
         </Togglable>
         <button onClick={handleLogout}>logout</button>
-         { props.blogs.map((blog) =>
+        <BlogList />
+         { /*props.blogs.map((blog) =>
           <Blog 
             key={blog.id} 
             blog={blog} 
             userId={props.user.user.id}
             handleLike={ () => handleLike(blog) }
             removeBlog={ () => props.removeBlog(blog.id) }
-
           />
-        ) 
-      }
+        )*/
+        }
       </div>
     )
   }
@@ -195,13 +188,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    showNotification: (message) => dispatch(showNotification(message)),
+    //showNotification: (message) => dispatch(showNotification(message)),
     getAllBlogs: () => dispatch(getAllBlogs()),
     createBlog: (blog) => dispatch(createBlog(blog)),
-    incrementLikes: (blog, id) => dispatch(incrementLikes(blog, id)),
-    logInUserFetch: (credentials) => dispatch(logInUserFetch(credentials)),
+    //incrementLikes: (blog, id) => dispatch(incrementLikes(blog, id)),
+    //logInUserFetch: (credentials) => dispatch(logInUserFetch(credentials)),
     logout: () => dispatch(logout()),
-    removeBlog: (id) => dispatch(removeBlog(id))
+    //removeBlog: (id) => dispatch(removeBlog(id))
   }
 }
 

@@ -107,7 +107,7 @@ export const logout = () => {
 
 
 export const logInUserFetch = (credentials) => {
-  return async dispatch => {
+  return dispatch => {
     //try {
       // const user = await loginService.login(credentials)
       // dispatch(loginSuccess(user))
