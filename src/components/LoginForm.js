@@ -24,6 +24,7 @@ const LoginForm = (props) => {
       // setBlogs([...fetchedBlogs])
       props.logInUserFetch({username, password})
       props.getAllBlogs()
+      console.log('kkakakak')
 
     } catch(error) {
       props.showNotification('incorrect login or password')
