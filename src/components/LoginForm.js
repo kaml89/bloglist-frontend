@@ -14,20 +14,9 @@ const LoginForm = (props) => {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      // const loggedUser = await loginService.login({username, password})
-      // console.log(user)
-      // localStorage.setItem('user', JSON.stringify(loggedUser))
-      
-      // setUser(loggedUser)
-      // const fetchedBlogs = await blogsService.getAll()
-      // fetchedBlogs.sort((a, b) => b.likes - a.likes)
-      // setBlogs([...fetchedBlogs])
       props.logInUserFetch({username, password})
-      props.getAllBlogs()
-      console.log('kkakakak')
 
     } catch(error) {
-      props.showNotification('incorrect login or password')
     }
     setUsername('')
     setPassword('')

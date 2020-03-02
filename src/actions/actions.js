@@ -2,19 +2,6 @@ import blogsService from '../services/blogs'
 import loginService from '../services/login'
 
 import * as type from './actionTypes'
-// export const SET_NOTIFICATION = 'SET_NOTIFICATION'
-// export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
-// export const RECEIVE_BLOGS = 'RECEIVE_BLOGS'
-// export const REQUEST_BLOGS = 'REQUEST_BLOGS'
-// export const CREATE_BLOG_SUCCESS = 'CREATE_BLOG_SUCCESS'
-// export const INCREMENT_LIKES = 'INCREMENT_LIKES'
-// export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
-// export const LOGIN_FAIL = 'LOGIN_FAIL'
-// export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
-// export const REMOVE_BLOG_SUCCESS = 'REMOVE_BLOG_SUCCESS'
-// export const REMOVE_BLOG_FAILED = 'REMOVE_BLOG_FAILED'
-
-
 
 export const setNotification = (message) => {
   return {
@@ -108,22 +95,22 @@ export const logout = () => {
 
 
 export const logInUserFetch = (credentials) => {
-  return dispatch => {
-    //try {
-      // const user = await loginService.login(credentials)
-      // dispatch(loginSuccess(user))
-      // localStorage.setItem('token', JSON.stringify(user.token))
-    // } catch(error) {
-    //   console.log(error)
-    // }
+  return async dispatch => {
+    try {
+      const user = await loginService.login(credentials)
+      dispatch(loginSuccess(user))
+      dispatch(getAllBlogs())
+      
+    } catch(error) {
+      dispatch(showNotification('incorrect login or password'))
+      console.log(error)
+    }
 
-    loginService.login(credentials)
-      .then(res => {
-        dispatch(loginSuccess(res))
-        // localStorage.setItem('token', JSON.stringify(res.token))
-        // localStorage.setItem('user', JSON.stringify(res))
-      })
-      .catch(error => console.log(error))
+    // loginService.login(credentials)
+    //   .then(res => {
+    //     dispatch(loginSuccess(res))
+    //   })
+    //   .catch(error => console.log(error))
   }
 }
 
