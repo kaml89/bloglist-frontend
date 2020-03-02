@@ -1,9 +1,4 @@
-import { 
-  LOGIN_SUCCESS, 
-  LOGIN_FAIL,
-  LOGOUT_SUCCESS,
-  REMOVE_BLOG_SUCCESS
-} from '../actions/actions'
+import * as type from '../actions/actionTypes'
 
 const initialState = {
   token: null,
@@ -14,15 +9,15 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch(action.type) {
-    case LOGIN_SUCCESS:
+    case type.LOGIN_SUCCESS:
       return {
         ...state,
         token: action.payload.token,
         isAuthenticated: true,
         user: action.payload
       }
-    case LOGOUT_SUCCESS:
-    case LOGIN_FAIL:
+    case type.LOGOUT_SUCCESS:
+    case type.LOGIN_FAIL:
       return {
         ...state,
         token: null,

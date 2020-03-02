@@ -1,10 +1,4 @@
-import { 
-  RECEIVE_BLOGS, 
-  REQUEST_BLOGS, 
-  CREATE_BLOG_SUCCESS, 
-  INCREMENT_LIKES, 
-  REMOVE_BLOG_SUCCESS
-} from "../actions/actions"
+import * as type from "../actions/actionTypes"
 
 const initialState = {
   isFetching: false,
@@ -13,21 +7,21 @@ const initialState = {
 
 const blogsReducer = (state = initialState, action) => {
   switch(action.type) {
-    case REQUEST_BLOGS:
+    case type.REQUEST_BLOGS:
       return { ...state, isFetching: true }
-    case RECEIVE_BLOGS:
+    case type.RECEIVE_BLOGS:
       return { 
         ...state, 
         items: action.blogs,
         isFetching: false 
       }
-    case CREATE_BLOG_SUCCESS:
+    case type.CREATE_BLOG_SUCCESS:
       return {
         ...state,
         items: [...state.items, action.payload],
         isFetching: false
       }
-    case INCREMENT_LIKES:
+    case type.INCREMENT_LIKES:
       const blog = state.items.find(item => item.id === action.id)
       return {
         ...state,
@@ -36,7 +30,7 @@ const blogsReducer = (state = initialState, action) => {
           {...blog, likes: blog.likes +1 }
         ]
       }
-    case REMOVE_BLOG_SUCCESS:
+    case type.REMOVE_BLOG_SUCCESS:
       return {
         ...state,
         items: [

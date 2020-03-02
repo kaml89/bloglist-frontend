@@ -1,30 +1,31 @@
 import blogsService from '../services/blogs'
 import loginService from '../services/login'
 
-export const SET_NOTIFICATION = 'SET_NOTIFICATION'
-export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
-export const RECEIVE_BLOGS = 'RECEIVE_BLOGS'
-export const REQUEST_BLOGS = 'REQUEST_BLOGS'
-export const CREATE_BLOG_SUCCESS = 'CREATE_BLOG_SUCCESS'
-export const INCREMENT_LIKES = 'INCREMENT_LIKES'
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
-export const LOGIN_FAIL = 'LOGIN_FAIL'
-export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
-export const REMOVE_BLOG_SUCCESS = 'REMOVE_BLOG_SUCCESS'
-export const REMOVE_BLOG_FAILED = 'REMOVE_BLOG_FAILED'
+import * as type from './actionTypes'
+// export const SET_NOTIFICATION = 'SET_NOTIFICATION'
+// export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
+// export const RECEIVE_BLOGS = 'RECEIVE_BLOGS'
+// export const REQUEST_BLOGS = 'REQUEST_BLOGS'
+// export const CREATE_BLOG_SUCCESS = 'CREATE_BLOG_SUCCESS'
+// export const INCREMENT_LIKES = 'INCREMENT_LIKES'
+// export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+// export const LOGIN_FAIL = 'LOGIN_FAIL'
+// export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
+// export const REMOVE_BLOG_SUCCESS = 'REMOVE_BLOG_SUCCESS'
+// export const REMOVE_BLOG_FAILED = 'REMOVE_BLOG_FAILED'
 
 
 
 export const setNotification = (message) => {
   return {
-    type: SET_NOTIFICATION,
+    type: type.SET_NOTIFICATION,
     message
   }
 }
 
 export const removeNotification = () => {
   return {
-    type: REMOVE_NOTIFICATION
+    type: type.REMOVE_NOTIFICATION
   }
 }
 
@@ -39,13 +40,13 @@ export const showNotification = (message) => {
 
 export const requestBlogs = () => {
   return {
-    type: REQUEST_BLOGS
+    type: type.REQUEST_BLOGS
   }
 }
 
 export const receiveBlogs = (blogs) => {
   return {
-    type: RECEIVE_BLOGS,
+    type: type.RECEIVE_BLOGS,
     blogs
   }
 }
@@ -65,7 +66,7 @@ export const getAllBlogs = () => {
 
 const createBlogSuccess = (payload) => {
   return {
-    type: CREATE_BLOG_SUCCESS,
+    type: type.CREATE_BLOG_SUCCESS,
     payload
   }
 }
@@ -82,26 +83,26 @@ export const incrementLikes = (updatedBlog, id) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token
     const response = await blogsService.update(updatedBlog, id, token)
-    dispatch({type: INCREMENT_LIKES, id})
+    dispatch({type: type.INCREMENT_LIKES, id})
   }
 }
 
 const loginSuccess = (payload) => {
   return {
-    type: LOGIN_SUCCESS,
+    type: type.LOGIN_SUCCESS,
     payload
   }
 }
 
 const loginFail = () => {
   return {
-    type: LOGIN_FAIL
+    type: type.LOGIN_FAIL
   }
 }
 
 export const logout = () => {
   return {
-    type: LOGOUT_SUCCESS
+    type: type.LOGOUT_SUCCESS
   }
 }
 
@@ -128,7 +129,7 @@ export const logInUserFetch = (credentials) => {
 
 const removeBlogSuccess = (id) => {
   return {
-    type: REMOVE_BLOG_SUCCESS,
+    type: type.REMOVE_BLOG_SUCCESS,
     id
   }
 } 

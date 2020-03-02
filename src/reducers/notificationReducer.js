@@ -1,10 +1,10 @@
-import { SET_NOTIFICATION, REMOVE_NOTIFICATION } from "../actions/actions"
+import * as type from "../actions/actionTypes"
 
 const notificationReducer = (state='', action) => {
   switch(action.type) {
-    case SET_NOTIFICATION:
+    case type.SET_NOTIFICATION:
       return action.message
-    case REMOVE_NOTIFICATION:
+    case type.REMOVE_NOTIFICATION:
       return ''
     default:
       return state
