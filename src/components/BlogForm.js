@@ -1,34 +1,57 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { createBlog } from '../actions/actions'
 
-const BlogForm = ({
-  addNewBlog,
-  handleTitleChange,
-  handleAuthorChange,
-  handleUrlChange,
-  title,
-  author,
-  url
-}) => {
+const BlogForm = props => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const handleSubmit = e => {
+    e.preventDefault()
+
+    const newBlog = {
+      title,
+      author,
+      url
+    }
+
+    props.createBlog(newBlog)
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
 
   return (
-    <form onSubmit={addNewBlog}>
-      <input label='title' type='text' value={title} onChange={handleTitleChange}/>
-      <input label='author' type='text' value={author} onChange={handleAuthorChange}/>
-      <input label='url' type='text' value={url} onChange={handleUrlChange}/>
+    <form onSubmit={handleSubmit}>
+      <input
+        label='title'
+        type='text'
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+      />
+      <input
+        label='author'
+        type='text'
+        value={author}
+        onChange={e => setAuthor(e.target.value)}
+      />
+      <input
+        label='url'
+        type='text'
+        value={url}
+        onChange={e => setUrl(e.target.value)}
+      />
       <button>add blog</button>
     </form>
   )
 }
 
-BlogForm.propTypes = {
-  addNewBlog: PropTypes.func.isRequired,
-  handleTitleChange: PropTypes.func.isRequired,
-  handleAuthorChange: PropTypes.func.isRequired,
-  handleUrlChange: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired
+const mapDispatchToProps = dispatch => {
+  return {
+    createBlog: blog => dispatch(createBlog(blog))
+  }
 }
 
-export default BlogForm
+export default connect(null, mapDispatchToProps)(BlogForm)

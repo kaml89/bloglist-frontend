@@ -60,9 +60,16 @@ const createBlogSuccess = (payload) => {
 
 export const createBlog = (blog) => {
   return async (dispatch, getState) => {
-    const token = getState().auth.token
-    const response = await blogsService.create(blog, token)
-    dispatch(createBlogSuccess(response))
+    try {
+      const token = getState().auth.token
+      const response = await blogsService.create(blog, token)
+      dispatch(createBlogSuccess(response))
+      dispatch(showNotification('blog has been succesfully created!'))
+    } catch(error) {
+      console.log(error)
+      dispatch(showNotification('blog could not have been created!'))
+    }
+    
   }
 }
 
