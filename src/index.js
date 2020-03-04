@@ -5,6 +5,4 @@ import Root from './components/Root'
 
 const store = configureStore()
 
-render(
-  <Root store = {store}/>
-  , document.getElementById('root'))
+render(<Root store={store} />, document.getElementById('root'))
