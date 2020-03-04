@@ -22,12 +22,12 @@ const blogsReducer = (state = initialState, action) => {
         isFetching: false
       }
     case type.INCREMENT_LIKES:
-      const blog = state.items.find(item => item.id === action.id)
+      //const blog = state.items.find(item => item.id === action.response.id)
       return {
         ...state,
         items: [
-          ...state.items.filter(item => item.id !== action.id),
-          {...blog, likes: blog.likes +1 }
+          ...state.items.filter(item => item.id !== action.response.id),
+          action.response
         ]
       }
     case type.REMOVE_BLOG_SUCCESS:

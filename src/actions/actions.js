@@ -77,7 +77,7 @@ export const incrementLikes = (updatedBlog, id) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token
     const response = await blogsService.update(updatedBlog, id, token)
-    dispatch({type: type.INCREMENT_LIKES, id})
+    dispatch({type: type.INCREMENT_LIKES, response})
   }
 }
 

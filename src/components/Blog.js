@@ -16,7 +16,7 @@ const Blog = ({ blog, userId, handleLike, removeBlog }) => {
       </div>
       <button
         onClick={removeBlog}
-        style={{ display: user.id === userId ? '' : 'none' }}
+        style={{ display: user === userId ? '' : 'none' }}
       >
         delete
       </button>
