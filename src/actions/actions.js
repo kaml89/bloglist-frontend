@@ -1,5 +1,6 @@
 import blogsService from '../services/blogs'
 import loginService from '../services/login'
+import usersService from '../services/users'
 
 import * as type from './actionTypes'
 
@@ -107,6 +108,7 @@ export const logInUserFetch = (credentials) => {
       const user = await loginService.login(credentials)
       dispatch(loginSuccess(user))
       dispatch(getAllBlogs())
+      dispatch(getAllUsers())
       
     } catch(error) {
       dispatch(showNotification('incorrect login or password'))
@@ -138,3 +140,30 @@ export const removeBlog = (id) => {
       .catch(error => console.log(error))
   }
 }
+
+const requestUsers = () => {
+  return {
+    type: type.REQUEST_USERS
+  }
+}
+
+const receiveUsers = (payload) => {
+  return {
+    type: type.RECEIVE_USERS,
+    payload
+  }
+}
+
+export const getAllUsers = () => {
+  return dispatch => {
+    dispatch(requestUsers())
+    usersService.getAll()
+      .then(response => {
+        dispatch(receiveUsers(response))
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+}
+

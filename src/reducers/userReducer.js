@@ -1,16 +1,22 @@
-// import { LOG_IN, LOG_OUT } from '../actions/actions'
+import * as type from '../actions/actionTypes'
 
-// const userReducer = (state={}, action) => {
-//   switch(action.type) {
-//     case LOG_IN:
-//       return {
-//         ...action.loggedUser
-//       }
-//     case LOG_OUT:
-//       return {}
-//     default:
-//       return state
-//   }
-// }
+const initialState = {
+  isLoading: false,
+  items: []
+}
 
-// export default userReducer
+const userReducer = (state = initialState, action) => {
+  switch(action.type) {
+    case type.REQUEST_USERS:
+      return state
+    case type.RECEIVE_USERS:
+      return {
+        ...state,
+        items: action.payload
+      }
+    default:
+      return state
+  }
+}
+
+export default userReducer

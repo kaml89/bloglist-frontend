@@ -1,10 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
+//import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
 import BlogForm from './BlogForm'
 import BlogList from './BlogList'
 import Notification from './Notification'
 import LoginForm from './LoginForm'
 import Togglable from './Togglable'
+import UserList from './UserList'
 
 import { logout } from '../actions/actions'
 
@@ -37,10 +39,14 @@ const App = props => {
         </Togglable>
         <button onClick={handleLogout}>logout</button>
         <BlogList />
+        <UserList />
       </div>
     )
   }
   return (
+    <Router>
+      <Route />
+    </Router>
     <div>{props.user.isAuthenticated ? renderBlogs() : renderLoginForm()}</div>
   )
 }
