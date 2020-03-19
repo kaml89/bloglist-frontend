@@ -1,11 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
+
 import Blog from './Blog'
+import BlogForm from './BlogForm'
+import Notification from './Notification'
+import Togglable from './Togglable'
+
 import { 
   incrementLikes,
   showNotification,
-  removeBlog
+  removeBlog,
+  logout
  } from '../actions/actions'
+
 
 const BlogList = (props) => {
 
@@ -21,18 +28,30 @@ const BlogList = (props) => {
     }
   }
 
+  const handleLogout = e => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    props.logout()
+  }
+
   return (
     <div>
-      {
-        props.blogs.map(blog => 
-          <Blog 
-            key={blog.id}
-            blog={blog}
-            userId={props.user.user.id}
-            handleLike={() => handleLike(blog)}
-            removeBlog={() => props.removeBlog(blog.id)}
-          />
-        )
+      <h2>blogs</h2>
+      <h3>{props.user.name} logged in</h3>
+      <Notification message={props.message} />
+      <Togglable buttonLabel='create new blog'>
+        <BlogForm />
+      </Togglable>
+      <button onClick={handleLogout}>logout</button>
+      {props.blogs.map(blog => 
+        <Blog 
+          key={blog.id}
+          blog={blog}
+          userId={props.user.user.id}
+          handleLike={() => handleLike(blog)}
+          removeBlog={() => props.removeBlog(blog.id)}
+        />
+      )
       }
     </div>
   )
@@ -50,7 +69,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     incrementLikes: (blog, id) => dispatch(incrementLikes(blog, id)),
     showNotification: (message) => dispatch(showNotification(message)),
-    removeBlog: (id) => dispatch(removeBlog(id))
+    removeBlog: (id) => dispatch(removeBlog(id)),
+    logout: () => dispatch(logout())
   }
 }
 
