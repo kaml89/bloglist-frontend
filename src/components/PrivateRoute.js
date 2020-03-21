@@ -3,12 +3,11 @@ import { connect } from 'react-redux'
 import { BrowserRouter as Router, Link, Route, Switch, Redirect } from 'react-router-dom'
 
 const PrivateRoute = ({ children, auth, ...rest }) => {
-  console.log(auth)
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth ? (
+        auth.isAuthenticated ? (
           children
         ) : (
           <Redirect
@@ -23,5 +22,11 @@ const PrivateRoute = ({ children, auth, ...rest }) => {
   )
 }
 
+const mapStateToProps = state => {
+  return {
+    auth: state.auth
+  }
+}
 
-export default PrivateRoute
+
+export default connect(mapStateToProps)(PrivateRoute)

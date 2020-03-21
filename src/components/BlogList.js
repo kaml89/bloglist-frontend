@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Blog from './Blog'
 import BlogForm from './BlogForm'
@@ -44,13 +45,11 @@ const BlogList = (props) => {
       </Togglable>
       <button onClick={handleLogout}>logout</button>
       {props.blogs.map(blog => 
-        <Blog 
-          key={blog.id}
-          blog={blog}
-          userId={props.user.user.id}
-          handleLike={() => handleLike(blog)}
-          removeBlog={() => props.removeBlog(blog.id)}
-        />
+        <Link to={`/blogs/${blog.id}`}>
+          <div>
+            { blog.title, blog.author }
+          </div>
+        </Link>
       )
       }
     </div>

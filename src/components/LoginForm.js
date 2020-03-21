@@ -20,7 +20,7 @@ const LoginForm = props => {
 
   return (
     <div>
-      {!props.user.isAuthenticated ? '' : <Redirect to='protected'/>}
+      {!props.user.isAuthenticated ? '' : <Redirect to='blogs'/>}
       <h2>Log in to application</h2>
       <Notification message={props.message} />
       <Togglable buttonLabel='log in'>
