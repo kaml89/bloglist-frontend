@@ -21,13 +21,15 @@ const blogsReducer = (state = initialState, action) => {
         items: [...state.items, action.payload],
         isFetching: false
       }
-    case type.INCREMENT_LIKES:
-      //const blog = state.items.find(item => item.id === action.response.id)
+    case type.INCREMENT_LIKES: 
       return {
         ...state,
         items: [
           ...state.items.filter(item => item.id !== action.response.id),
-          action.response
+        {
+          ...action.response,
+          user: state.items.find(item => item.id === action.response.id).user
+        }
         ]
       }
     case type.REMOVE_BLOG_SUCCESS:
@@ -41,5 +43,6 @@ const blogsReducer = (state = initialState, action) => {
       return state
   }
 }
+
 
 export default blogsReducer

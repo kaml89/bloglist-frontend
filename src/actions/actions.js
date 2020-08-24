@@ -130,12 +130,14 @@ const removeBlogSuccess = (id) => {
   }
 } 
 
-export const removeBlog = (id) => {
+export const removeBlog = (id, history) => {
   return (dispatch, getState) => {
     const token = getState().auth.token
     blogsService.deleteBlog(id, token)
       .then(res => {
+        history.push('/blogs')
         dispatch(removeBlogSuccess(id))
+        
       })
       .catch(error => console.log(error))
   }

@@ -8,7 +8,7 @@ import {
   showNotification
 } from '../actions/actions'
 
-const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification }) => {
+const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification, history }) => {
   const [visibility, setVisibility] = useState(false)
   const { id } = useParams()
 
@@ -24,6 +24,7 @@ const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification }) => 
   }
 
   const { title, author, url, likes, user } = blog
+  console.log(history)
   return (
     <div style={{ border: 'solid 1px black', marginBottom: '2px' }}>
       <div onClick={() => setVisibility(!visibility)}>
@@ -35,8 +36,8 @@ const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification }) => 
         {author}
       </div>
       <button
-        onClick={() => removeBlog(blog.id)}
-        style={{ display: user === userId ? '' : 'none' }}
+        onClick={() => removeBlog(blog.id, history)}
+        style={{ display: user.id === userId ? '' : 'none' }}
       >
         delete
       </button>
@@ -45,17 +46,16 @@ const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification }) => 
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps.match.params)
   return {
     blog: state.blogs.items.find(item => item.id === ownProps.match.params.id),
     userId: state.auth.user.id
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch)=> {
   return {
     incrementLikes: (blog, id) => dispatch(incrementLikes(blog, id)),
-    removeBlog: id => dispatch(removeBlog(id)),
+    removeBlog: (id, history) => dispatch(removeBlog(id, history)),
     showNotification: message => dispatch(showNotification(message))
   }
 }
