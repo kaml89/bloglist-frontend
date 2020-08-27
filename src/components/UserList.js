@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux' 
+import { Link } from 'react-router-dom'
 import { getAllUsers } from '../actions/actions'
 
-const UserList = ( props ) => {
+const UserList = ({ users, getAllUsers}) => {
+  useEffect(() => {
+    getAllUsers()
+  }, [])
+
   return (
     <div>
       {
-        props.users.map(user => 
-          <div key={user.id}>{ user.name }</div>
+        users.map(user => 
+          <Link to={`users/${user.id}`}>
+            <div key={user.id}>{ user.name } <span> { user.blogs.length } </span></div>
+          </Link>
         )
       }
     </div>
