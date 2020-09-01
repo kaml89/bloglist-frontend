@@ -23,7 +23,7 @@ const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification, histo
     }
   }
 
-  const { title, author, url, likes, user } = blog
+  const { title, author, url, likes, user, comments } = blog
   console.log(history)
   return (
     <div style={{ border: 'solid 1px black', marginBottom: '2px' }}>
@@ -34,6 +34,12 @@ const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification, histo
         <a href=''>{url}</a>
         {likes} likes <button onClick={() => handleLike(blog)}>like</button>
         {author}
+        <div className='comments'>
+          comments:
+          <ul>
+            {comments.map((item, i)=> <li key={i}>{item}</li>)}
+          </ul>
+        </div>
       </div>
       <button
         onClick={() => removeBlog(blog.id, history)}
