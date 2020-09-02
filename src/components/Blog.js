@@ -1,20 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { withRouter, useParams } from 'react-router-dom'
 
 import {
   incrementLikes,
   removeBlog,
-  showNotification
+  showNotification,
+  getAllBlogs
 } from '../actions/actions'
 
-const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification, history }) => {
+const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification, getAllBlogs, history }) => {
   const [visibility, setVisibility] = useState(false)
   const { id } = useParams()
 
+  useEffect(() => {
+    getAllBlogs()
+  }, [])
+
   const handleLike = async likedBlog => {
     try {
-      const updatedObj = { ...likedBlog, likes: likedBlog.likes + 1 }
+      const updatedObj = { ...likedBlog }
 
       incrementLikes(updatedObj, likedBlog.id)
       showNotification('you liked this post')
@@ -62,7 +67,8 @@ const mapDispatchToProps = (dispatch)=> {
   return {
     incrementLikes: (blog, id) => dispatch(incrementLikes(blog, id)),
     removeBlog: (id, history) => dispatch(removeBlog(id, history)),
-    showNotification: message => dispatch(showNotification(message))
+    showNotification: message => dispatch(showNotification(message)),
+    getAllBlogs: () => dispatch(getAllBlogs())
   }
 }
 
