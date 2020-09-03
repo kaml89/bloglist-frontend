@@ -16,13 +16,13 @@ const tokenConfig = (token) => {
 }
 
 const getAll = async (id) => {
-    const response = await axios.get(`${baseUrl}/${id}`)
+    const response = await axios.get(`${baseUrl}/${id}/comments`)
     return response.data
 }
 
-const add = async (newComment, id, token) => {
+const add = async (id, newComment, token) => {
     const config = tokenConfig(token)
-    const response = await axios.put(`${baseUrl}/${id}`, {data: newComment}, config)
+    const response = await axios.put(`${baseUrl}/${id}/comments`, {data: newComment}, config)
     return response
 }
 

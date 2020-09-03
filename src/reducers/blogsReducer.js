@@ -32,6 +32,18 @@ const blogsReducer = (state = initialState, action) => {
         }
         ]
       }
+    case type.ADD_COMMENT_SUCCESS:
+      return {
+        ...state,
+        items: [
+          ...state.items.filter(item => item.id !== action.payload.id),
+        {
+          ...action.payload,
+          user: state.items.find(item => item.id === action.payload.id).user
+        }
+        ]
+
+      }
     case type.REMOVE_BLOG_SUCCESS:
       return {
         ...state,

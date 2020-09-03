@@ -23,39 +23,19 @@ const getAll = async (token) => {
   return response.data
 }
 
-// const setToken = (newToken) => {
-//   token = `Bearer ${newToken}`
-// }
-
 const create = async (newObj, token) => {
-  // const config = {
-  //   headers: {
-  //     Authorization: token
-  //   }
-  // }
-
   const config = tokenConfig(token)
   const response = await axios.post(baseUrl, newObj, config)
   return response.data
 }
 
 const update = async (updatedObj, id, token) => {
-  // const config = {
-  //   headers: {
-  //     Authorization: token
-  //   }
-  // }
   const config = tokenConfig(token)
   const response = await axios.put(`${baseUrl}/${id}`, updatedObj, config)
   return response.data
 }
 
 const deleteBlog = async (id, token) => {
-  // const config = {
-  //   headers: {
-  //     Authorization: token
-  //   }
-  // }
   const config = tokenConfig(token)
   const response = await axios.delete(`${baseUrl}/${id}`, config)
   return response

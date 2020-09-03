@@ -6,11 +6,13 @@ import {
   incrementLikes,
   removeBlog,
   showNotification,
-  getAllBlogs
+  getAllBlogs,
+  addComment
 } from '../actions/actions'
 
-const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification, getAllBlogs, history }) => {
+const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification, getAllBlogs, history, addComment }) => {
   const [visibility, setVisibility] = useState(false)
+  const [comment, setComment] = useState('')
   const { id } = useParams()
 
   useEffect(() => {
@@ -19,17 +21,20 @@ const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification, getAl
 
   const handleLike = async likedBlog => {
     try {
-      const updatedObj = { ...likedBlog }
-
-      incrementLikes(updatedObj, likedBlog.id)
+      incrementLikes(likedBlog, likedBlog.id)
       showNotification('you liked this post')
     } catch (error) {
       console.log(error)
     }
   }
 
+  const handleAddComment = (e, id) => {
+    e.preventDefault()
+    addComment(comment, id)
+  }
+
   const { title, author, url, likes, user, comments } = blog
-  console.log(history)
+  
   return (
     <div style={{ border: 'solid 1px black', marginBottom: '2px' }}>
       <div onClick={() => setVisibility(!visibility)}>
@@ -44,6 +49,14 @@ const Blog = ({blog, userId, removeBlog, incrementLikes, showNotification, getAl
           <ul>
             {comments.map((item, i)=> <li key={i}>{item}</li>)}
           </ul>
+          <form onSubmit={(e) => handleAddComment(e, blog.id)}>
+            <input 
+            type='text'
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            />
+            <button>add comment</button>
+          </form>
         </div>
       </div>
       <button
@@ -68,7 +81,8 @@ const mapDispatchToProps = (dispatch)=> {
     incrementLikes: (blog, id) => dispatch(incrementLikes(blog, id)),
     removeBlog: (id, history) => dispatch(removeBlog(id, history)),
     showNotification: message => dispatch(showNotification(message)),
-    getAllBlogs: () => dispatch(getAllBlogs())
+    getAllBlogs: () => dispatch(getAllBlogs()),
+    addComment: (comment, id) => dispatch(addComment(comment, id))
   }
 }
 

@@ -1,6 +1,7 @@
 import blogsService from '../services/blogs'
 import loginService from '../services/login'
 import usersService from '../services/users'
+import commentsService from '../services/comments'
 
 import * as type from './actionTypes'
 
@@ -71,6 +72,26 @@ export const createBlog = (blog) => {
       dispatch(showNotification('blog could not have been created!'))
     }
     
+  }
+}
+
+const addCommentSuccess = (payload) => {
+  return {
+    type: type.ADD_COMMENT_SUCCESS,
+    payload
+  }
+}
+
+export const addComment = (comment, id) => {
+  return async (dispatch, getState) => {
+    try {
+      const token = getState().auth.token
+      const response = await commentsService.add(id, comment, token)
+      dispatch(addCommentSuccess(response.data))
+    } catch(error) {
+      console.log(error)
+      dispatch(showNotification('could not add comment'))
+    }
   }
 }
 
