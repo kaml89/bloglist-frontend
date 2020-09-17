@@ -21,4 +21,9 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const create = async ( newUser ) => {
+  const response = await axios.post(baseUrl, newUser)
+  return response.data
+}
+
 export default { getAll }

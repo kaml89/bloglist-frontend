@@ -9,30 +9,29 @@ import PrivateRoute from './PrivateRoute'
 import Blog from './Blog'
 import User from './User'
 import Navbar from './Navbar'
+import CreateAccountForm from './CreateAccountForm'
 
 const App = props => {
 
   return (
     <Router>
+      <Navbar/>
       <div>
         <Switch>
           <Route exact path='/' component={ LoginForm } />
           <Route path='/login' component={ LoginForm } />
+          <Route path='/signup' component={ CreateAccountForm }/>
           <Route path='/public' component={ LoginForm } />
           <PrivateRoute path='/blogs/:id'>
-            <Navbar/>
             <Blog/>
           </PrivateRoute>
           <PrivateRoute path='/blogs'>
-            <Navbar/>
             <BlogList />
           </PrivateRoute>
           <PrivateRoute path='/users/:id'>
-            <Navbar/>
             <User />
           </PrivateRoute>
           <PrivateRoute path='/users'>
-            <Navbar/>
             <UserList />
           </PrivateRoute>
           

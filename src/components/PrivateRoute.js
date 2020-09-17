@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Link, Route, Switch, Redirect } from 'react-router-dom'
-import Navbar from './Navbar'
+import { Route, Redirect } from 'react-router-dom'
 
 const PrivateRoute = ({ children, auth, ...rest }) => {
   return (
@@ -9,7 +8,6 @@ const PrivateRoute = ({ children, auth, ...rest }) => {
       {...rest}
       render={({ location }) =>
         auth.isAuthenticated ? (
-          <Navbar/>,
           children
         ) : (
           <Redirect

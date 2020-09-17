@@ -1,5 +1,5 @@
 import blogsService from '../services/blogs'
-import loginService from '../services/login'
+import authService from '../services/auth'
 import usersService from '../services/users'
 import commentsService from '../services/comments'
 
@@ -95,6 +95,24 @@ export const addComment = (comment, id) => {
   }
 }
 
+const createUserSuccess = (payload) => {
+  return {
+    type: type.CREATE_USER_SUCCESS,
+    payload
+  }
+}
+
+export const createUser = (newUser) => {
+  return async (dispatch) => {
+    try {
+      const response = await authService.register(newUser)
+      dispatch(createUserSuccess(response))
+    } catch(error) {
+      dispatch(showNotification('could not create account'))
+    }
+  }
+}
+
 export const incrementLikes = (updatedBlog, id) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token
@@ -126,7 +144,7 @@ export const logout = () => {
 export const logInUserFetch = (credentials) => {
   return async dispatch => {
     try {
-      const user = await loginService.login(credentials)
+      const user = await authService.login(credentials)
       dispatch(loginSuccess(user))
       dispatch(getAllBlogs())
       dispatch(getAllUsers())
@@ -136,7 +154,7 @@ export const logInUserFetch = (credentials) => {
       console.log(error)
     }
 
-    // loginService.login(credentials)
+    // authService.login(credentials)
     //   .then(res => {
     //     dispatch(loginSuccess(res))
     //   })
