@@ -1,48 +1,65 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { createUser } from '../actions/actions' 
+import { useForm } from 'react-hook-form'
+import { createUser, showNotification } from '../actions/actions' 
 
 const CreateAccountForm = ({ createUser }) => {
 
-    const [ name, setName ] = useState('')
-    const [ username, setUsername] = useState('') 
-    const [ password, setPassword ] = useState('')
-    const [ confirmPassword, setConfirmPassword ] = useState('')
+    const { register, handleSubmit, getValues, errors } = useForm()
 
-    const handleSubmit = e => {
-        e.preventDefault()
-        console.log(name, username, password, confirmPassword)
-        createUser({username, name, password})
-    }
+    const onSubmit = ({ email, name, username, password }) => createUser({email, name, username, password})
 
     return (
         <div>
-            <form onSubmit={e => handleSubmit(e)}>
+            {errors.email && 'invalid email'}
+            <form onSubmit={ handleSubmit(onSubmit)}>
+            <input
+                    placeholder='Email'
+                    type='text'
+                    name='email'
+                    ref={register({required:true, pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "invalid email address"
+                      }})}
+                />
+                {errors.email && (<p>{errors.email.message}</p>)}
                 <input
                     placeholder='Name'
                     type='text'
-                    value={ name }
-                    onChange={ e => setName(e.target.value) }
+                    name='name'
+                    ref={register({required: true})}
                 />
+                {errors.name && (<p>{errors.name}</p>)}
+
                 <input
                     placeholder='Username'
                     type='text'
-                    value={ username }
-                    onChange={ e => setUsername(e.target.value) }
+                    name='username'
+                    ref={register({required: true})}
                 />
+                {errors.username && (<p>{errors.username}</p>)}
+
                 <input
                     placeholder='Password'
                     type='password'
-                    value={ password}
-                    onChange={ e => setPassword(e.target.value) }
+                    name='password'
+                    ref={register({required: true, minLength: 4})}
                 />
+                {errors.password && (<p>{errors.password}</p>)}
+
                 <input
                     placeholder='Confirm password'
                     type='password'
-                    value={ confirmPassword }
-                    onChange={ e => setConfirmPassword(e.target.value) }
+                    name='confirmPassword'
+                    ref={register({
+                            required: true,
+                            validate: value => {
+                                return getValues().password === value || "Passwords should match"
+                            }
+                        })}
                 />
-                <button type='submit'>Create Account</button>
+                {errors.confirmPassword && (<p>{errors.confirmPassword.message}</p>)}
+                <button>Create Account</button>
             </form>
         </div>
     )
@@ -50,7 +67,8 @@ const CreateAccountForm = ({ createUser }) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createUser: newUser => dispatch(createUser(newUser))
+        createUser: newUser => dispatch(createUser(newUser)),
+        showNotification: message => dispatch(showNotification(message))
     }
 }
 

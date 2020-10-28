@@ -1,47 +1,36 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
+import { useForm } from 'react-hook-form'
 import { createBlog } from '../actions/actions'
 
 const BlogForm = props => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
-  const handleSubmit = e => {
-    e.preventDefault()
+  const { register, handleSubmit, watch, error } = useForm()
 
-    const newBlog = {
-      title,
-      author,
-      url
-    }
-
-    props.createBlog(newBlog)
-
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
+  const onSubmit = data => props.createBlog(data)
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <input
         label='title'
         type='text'
-        value={title}
-        onChange={e => setTitle(e.target.value)}
+        name='title'
+        ref={register({required: true})}
+        
+        
       />
       <input
         label='author'
         type='text'
-        value={author}
-        onChange={e => setAuthor(e.target.value)}
+        name='author'
+        ref={register}
+        
       />
       <input
         label='url'
         type='text'
-        value={url}
-        onChange={e => setUrl(e.target.value)}
+        name='url'
+        ref={register}
       />
       <button>add blog</button>
     </form>
